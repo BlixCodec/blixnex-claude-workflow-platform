@@ -1,0 +1,131 @@
+{
+  "$schema": "https://blixnex.example/schemas/workflow.v1.json",
+  "id": "wf_new_lead_nurture",
+  "name": "New Lead Nurture",
+  "version": 3,
+  "description": "Qualify a new lead, book if high-intent (owner-approved), otherwise nurture; recover no-shows. Illustrative & sanitized — no real data.",
+  "enabled": true,
+  "trigger": {
+    "type": "event",
+    "event": "lead.created",
+    "filters": {
+      "source_in": ["website_chat", "demo_site", "inbound_call", "sms"]
+    }
+  },
+  "context_requirements": {
+    "source_of_truth": ["brand_profile", "pricing", "services", "business_hours"],
+    "on_missing": "escalate_to_owner"
+  },
+  "budget": {
+    "max_llm_cost_usd_per_run": 0.25,
+    "on_exceeded": "halt_and_notify"
+  },
+  "steps": [
+    {
+      "id": "qualify",
+      "type": "llm",
+      "task": "lead_qualification",
+      "grounded": true,
+      "input": {
+        "untrusted_fields": ["lead.message", "lead.notes"],
+        "fence_untrusted": true
+      },
+      "output_schema": {
+        "intent": ["high", "medium", "low"],
+        "service_requested": "string|null",
+        "summary": "string"
+      },
+      "next": "route_intent"
+    },
+    {
+      "id": "route_intent",
+      "type": "branch",
+      "on": "qualify.output.intent",
+      "cases": {
+        "high": "draft_booking",
+        "medium": "enqueue_nurture",
+        "low": "enqueue_nurture"
+      },
+      "default": "enqueue_nurture"
+    },
+    {
+      "id": "draft_booking",
+      "type": "action",
+      "action": "book_appointment",
+      "approval": {
+        "required": true,
+        "channel": "owner",
+        "preview_template": "📋 Draft: book {{lead.name}} for {{service_requested}} — reply Y to confirm, N to cancel.",
+        "expires_after_minutes": 1440
+      },
+      "idempotency_key": "book:{{lead.id}}:{{proposed_slot}}",
+      "on_approved": "send_confirmation",
+      "on_declined": "enqueue_nurture",
+      "on_timeout": "notify_owner"
+    },
+    {
+      "id": "send_confirmation",
+      "type": "action",
+      "action": "send_message",
+      "channel": "auto",
+      "respect_opt_out": true,
+      "idempotency_key": "confirm:{{booking.id}}",
+      "next": "schedule_followup"
+    },
+    {
+      "id": "schedule_followup",
+      "type": "delay",
+      "delay": { "hours": 24 },
+      "next": "post_booking_checkin"
+    },
+    {
+      "id": "post_booking_checkin",
+      "type": "action",
+      "action": "send_message",
+      "channel": "auto",
+      "respect_opt_out": true,
+      "next": "record_metrics"
+    },
+    {
+      "id": "enqueue_nurture",
+      "type": "cadence",
+      "cadence": [
+        { "after": { "days": 1 }, "action": "send_message", "respect_opt_out": true },
+        { "after": { "days": 3 }, "action": "send_message", "respect_opt_out": true },
+        { "after": { "days": 7 }, "action": "send_message", "respect_opt_out": true }
+      ],
+      "stop_on": ["lead.replied", "lead.booked", "lead.opted_out"],
+      "next": "record_metrics"
+    },
+    {
+      "id": "record_metrics",
+      "type": "action",
+      "action": "record_metrics",
+      "next": "notify_owner"
+    },
+    {
+      "id": "notify_owner",
+      "type": "notification",
+      "channels": ["in_app", "email"],
+      "terminal": true
+    }
+  ],
+  "listeners": [
+    {
+      "id": "no_show_recovery",
+      "on": "booking.no_show",
+      "step": {
+        "type": "action",
+        "action": "send_message",
+        "approval": { "required": true, "channel": "owner" },
+        "respect_opt_out": true,
+        "idempotency_key": "recovery:{{booking.id}}"
+      }
+    }
+  ],
+  "safety": {
+    "consequential_actions_require_approval": ["send_message", "book_appointment", "send_payment_link"],
+    "ai_emitted_payment_max_usd": 5000,
+    "all_actions_tenant_scoped": true
+  }
+}

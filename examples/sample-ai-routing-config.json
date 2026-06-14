@@ -1,0 +1,68 @@
+{
+  "$schema": "https://blixnex.example/schemas/ai-routing.v1.json",
+  "description": "Task-based model routing with primary/fallback chains, budgets, and safety flags. Illustrative & sanitized — model IDs are representative, keys are never stored here.",
+  "defaults": {
+    "fence_untrusted_input": true,
+    "log_tokens_and_cost": true,
+    "on_all_providers_failed": "deterministic_fallback"
+  },
+  "budgets": {
+    "per_render_usd_max": 5.0,
+    "repair_pass_usd_max": 1.5,
+    "per_tenant_daily_usd_cap": 500.0,
+    "research_soft_cap_usd": 0.5,
+    "vision_qa_soft_cap_usd": 0.3
+  },
+  "tasks": {
+    "public_sales": {
+      "primary": { "provider": "anthropic", "model": "claude-sonnet" },
+      "fallbacks": [
+        { "provider": "openai", "model": "gpt-class-mini" },
+        { "provider": "groq", "model": "open-weight-fast" }
+      ],
+      "grounding": "retrieval_required",
+      "max_output_tokens": 1024
+    },
+    "lead_qualification": {
+      "primary": { "provider": "openai", "model": "gpt-class-mini" },
+      "fallbacks": [{ "provider": "anthropic", "model": "claude-haiku-class" }],
+      "grounding": "source_of_truth_required"
+    },
+    "site_editor": {
+      "primary": { "provider": "anthropic", "model": "claude-sonnet" },
+      "fallbacks": [{ "provider": "openai", "model": "gpt-class" }],
+      "output": "json_patch_validated"
+    },
+    "demo_generation": {
+      "primary": { "provider": "openrouter", "model": "deepseek-class-pro" },
+      "fallbacks": [
+        { "provider": "agent_daemon", "model": "claude-sonnet" },
+        { "provider": "agent_daemon", "model": "gemini-class" }
+      ],
+      "note": "DeepSeek is the HTML-generation workhorse; Claude is the start-failure fallback agent.",
+      "render_mode_env": "RENDER_COMPOSER_MODE"
+    },
+    "research": {
+      "primary": { "provider": "anthropic", "model": "claude-sonnet" },
+      "tools": ["web_search", "web_fetch"],
+      "feature_flag": "RESEARCH_INTEL_ENABLED",
+      "default_enabled": false,
+      "limits": { "max_searches": 2, "max_fetches": 6 }
+    },
+    "vision_qa": {
+      "primary": { "provider": "anthropic", "model": "claude-sonnet-vision" },
+      "feature_flag": "VISION_QA_GATE_ENABLED",
+      "default_enabled": false,
+      "behavior": "flag_below_threshold_do_not_silently_block",
+      "threshold": 8
+    },
+    "embeddings": {
+      "primary": { "provider": "openai", "model": "text-embedding-class" },
+      "use": "rag_retrieval"
+    },
+    "image_generation": {
+      "primary": { "provider": "openai", "model": "image-gen-class" },
+      "fallback": "real_prospect_site_photos"
+    }
+  }
+}
