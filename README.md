@@ -24,7 +24,7 @@ This repository is a sanitized public case study built to show how I scope messy
 <p align="center">
   <img src="screenshots/01-operator-dashboard.png" alt="BlixNex operator console" width="640">
   <br>
-  <sub>The BlixNex operator console — one multi-tenant cockpit for managing multiple local-service clients. <em>(Images are placeholders pending sanitized captures.)</em></sub>
+  <sub>The BlixNex operator console — one multi-tenant cockpit for managing multiple local-service clients.</sub>
 </p>
 
 ---
@@ -277,7 +277,7 @@ Building BlixNex taught me that useful AI systems are not just model calls — t
 
 ## Screenshots / Demo
 
-> The images below are **placeholders pending sanitized captures.** Replace each file in [`screenshots/`](screenshots/) with a real screenshot of the **same filename** and it appears here automatically. Redact any real customer names, phone numbers, emails, addresses, or internal URLs first — the cleanest approach is to seed a demo tenant with fake data and capture that. *(The operator console is shown at the top of this page.)*
+> Sanitized captures from the live product — test/demo-tenant data only; real business names, phone numbers, and operator-only controls have been removed. *(The operator console is shown at the top of this page.)*
 
 #### Visual workflow engine — trigger → condition → action automations with branching, waits, and replay
 ![Visual workflow editor](screenshots/02-workflow-editor.png)
@@ -285,10 +285,10 @@ Building BlixNex taught me that useful AI systems are not just model calls — t
 #### Versioned prompts — AI behavior stored, versioned, activated, and archived for auditability
 ![Prompt version management](screenshots/03-prompt-versions.png)
 
-#### Call QA & intelligence loop — calls scored against a rubric, with proposed prompt improvements held for operator approval
+#### AI receptionist call activity — every inbound/outbound call logged, timed, and outcome-tracked (feeds post-call scoring)
 ![AI receptionist call-QA score](screenshots/04-voice-call-qa.png)
 
-#### Cost governance — per-client token / cost / latency logging and daily spend caps
+#### Multi-provider AI routing — primary + fallback model per surface across 7 providers, with token-spend monitoring
 ![Cost and usage monitoring](screenshots/05-cost-usage.png)
 
 #### Human-in-the-loop — consequential actions are staged as drafts and require explicit owner approval
@@ -297,7 +297,7 @@ Building BlixNex taught me that useful AI systems are not just model calls — t
 #### Autonomous lead discovery — research campaigns by niche and geography, with opportunity scoring
 ![Lead-discovery campaign](screenshots/07-lead-discovery.png)
 
-#### Personalized demo generation — a tenant-specific marketing site produced by the render pipeline
+#### AI-built website — a generated marketing site with a responsive live preview and "request changes" flow
 ![Generated demo page](screenshots/08-generated-demo.png)
 
 #### Client portal — the per-client view: dashboards, bookings, conversations, reputation, and settings
