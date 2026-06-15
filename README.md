@@ -217,10 +217,10 @@ The workflow engine supports triggers, conditions, actions, waits, branches, rep
 | [`docs/handoff-runbook.md`](docs/handoff-runbook.md) | Environments, secrets, deploy, doctrines, runbooks. |
 | [`docs/status-and-scope.md`](docs/status-and-scope.md) | Honest, line-by-line status matrix. |
 | [`examples/`](examples/) | Sanitized workflow, AI-routing, and prompt-version artifacts. |
-| [`code-samples/`](code-samples/) | Original illustrative code: workflow engine, AI routing, prompt safety. |
-| [`diagrams/`](diagrams/) | Mermaid system + lifecycle diagrams. |
+| [`code-samples/`](code-samples/) | Original, sanitized, **type-checked** code — workflow engine, AI routing, prompt safety. Start with its [`README`](code-samples/README.md) for a guided review. |
+| [`diagrams/`](diagrams/) | Mermaid diagrams — system, lifecycle, render pipeline, responsible-AI. The [`README`](diagrams/README.md) says what each one proves. |
 
-> The TypeScript in [`code-samples/`](code-samples/) is **strict-mode type-checked** — run `npm install && npm run typecheck` (0 errors).
+> The TypeScript in [`code-samples/`](code-samples/) is **strict-mode type-checked** — run `npm install && npm run typecheck` (0 errors). The code samples are intentionally small, type-checked examples designed to show the safety and workflow patterns behind the case study.
 
 ---
 
