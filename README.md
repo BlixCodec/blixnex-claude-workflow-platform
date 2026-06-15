@@ -13,6 +13,17 @@ This repository is a sanitized public case study built to show how I scope messy
   <img alt="ai" src="https://img.shields.io/badge/AI-multi--provider%20%2B%20Claude-8A2BE2">
 </p>
 
+## Live Preview
+
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-blixnex.com-6E56CF?style=for-the-badge)](https://blixnex.com)
+[![GitHub Case Study](https://img.shields.io/badge/GitHub-Case%20Study-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/BlixCodec/blixnex-claude-workflow-platform)
+
+- **Live demo / website:** https://blixnex.com
+- **GitHub case study:** https://github.com/BlixCodec/blixnex-claude-workflow-platform
+
+View the live BlixNex interface/demo to see the product experience, UI/UX direction, and
+workflow design. This public preview is sanitized and intended for portfolio review.
+
 ## What this case study proves
 
 - **Workflow scoping** — turning messy, interrupt-driven operations into explicit, multi-surface workflows.
